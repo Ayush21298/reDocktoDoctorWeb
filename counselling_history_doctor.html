@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/all.min.css">
+    <script src="js/all.min.js" charset="utf-8"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="./css/dashboard.css" />
+    <link rel="stylesheet" href="css/counselling_history_doctor.css">
+
+    <title>Redocto</title>
+  </head>
+  <body>
+    <div class="curvy-header">
+      Calls
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+      <path
+        fill="#95A3EF"
+        fill-opacity="1"
+        d="M0,96L48,106.7C96,117,192,139,288,133.3C384,128,480,96,576,101.3C672,107,768,149,864,181.3C960,213,1056,235,1152,213.3C1248,192,1344,128,1392,96L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
+      ></path>
+    </svg>
+    <div class="container">
+      <div class="row" style="margin-bottom:20px">
+        <div class="col-9">
+        </div>
+        <div class="col-2">
+          <label class="switch">
+           <input type="checkbox" id="slider">
+           <span class="slider round"></span>
+         </label>
+         <div class="availability">
+           <span class="available">Available</span>
+         </div>
+        </div>
+      </div>
+      <ul class="nav nav-pills nav-fill">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="pill" id="calling">Available Calls</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="pill" id="history_stats">Calling History</a>
+        </li>
+      </ul>
+      <div class="calling" style="margin-top:40px;">
+        <div style="float:right" onclick="update_calls()">
+          <img src="icons/png/refresh.png" width="26px">
+        </div>
+        <div class="container" id="call_container">
+        </div>
+      </div>
+      <div class="history" style="margin-top:40px">
+        <div class="container" id="history_stats_1">
+        </div>
+      </div>
+    </div>
+
+    <br><br><br>
+    <div class="footer">
+      <div class="footer-element" id="wallet" >
+          <i class="fas fa-credit-card" ></i><br>
+          Wallet
+      </div>
+      <div class="footer-element" id="doctopad">
+          <i class="fas fa-file-alt footer-icon" ></i><br>
+          History
+      </div>
+      <div class="footer-element active" id="counselling">
+          <i class="fas fa-heart footer-icon" ></i><br>
+          Counselling
+      </div>
+      <div class="footer-element" id="upload">
+          <i class="far fa-calendar-alt footer-icon" ></i><br>
+          Upload
+      </div>
+      <div class="footer-element" id="profile_doctor">
+        <i class="fas fa-user footer-icon" ></i><br>
+          Profile
+      </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="js/bootstrap.min.js" charset="utf-8"></script>
+    <script src="js/index.js" charset="utf-8"></script>
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+      $('.history').hide();
+      $('#calling').on("click",function(){
+        $('.calling').show();
+        $('.history').hide();
+      })
+      $('#history_stats').on("click",function(){
+        $('.history').show();
+        $('.calling').hide();
+      });
+      if(getCookie("busy")==="true")
+      {
+        $('#slider').prop("checked",true);
+        $('.availability').html('<span class="busy">Busy</span>')
+      }
+      update_calls();
+      update_history();
+      $('#slider').change(function(){
+          if($(this).is(':checked'))
+          {
+            $('.availability').html('<span class="busy">Busy</span>')
+            $.post(update_doctor_status_url,
+            {
+            "phone_no": getCookie("phone_no"),
+            "busy": "true"
+            },
+            function(data, status){
+                // alert(JSON.stringify(data));
+            });
+            setCookie("busy", "true");
+          }
+          else
+          {
+            $('.availability').html('<span class="available">Available</span>')
+            $.post(update_doctor_status_url,
+            {
+            "phone_no": getCookie("phone_no"),
+            "busy": "false"
+            },
+            function(data, status){
+                // alert(JSON.stringify(data));
+            });
+            setCookie("busy", "false"); // Checkbox is not checked..
+          }
+      });
+    });
+      function ignore_call (){
+          $.post(ignore_call_url,
+          {
+              "call_id" : getCookie("call_id")
+          },
+          function(data, status){
+              alert("Call Ignored.");
+              update_calls();
+          });
+      }
+      function update_calls(){
+        var temp="No calls in pipeline. Try refreshing"
+        $("#call_container").html("");
+        $.post(get_call_url,
+        {
+            "doctor_phone_call" : getCookie("phone_no")
+        },
+        function(data, status){
+            for (var i = 0; i < data.length ; i++) {
+              if(i==0){
+                temp=""
+              }
+              temp+=`<div class="row" style="margin-top:30px" >
+                <div class="col">
+                  <div class="card" style="text-align:center;border-radius:20px">
+                    <div class="row">
+                      <div class="col" style="margin-top:10px">
+                        <div>${data[i]["user_name"]}</div>
+                        <div>${data[i]["id"]}</div>
+                      </div>
+                    </div>
+                    <div class="row" style="margin-top:20px;margin-bottom:10px;">
+                      <div class="col">
+                      <img src="icons/png/recieve.png" height="35px" onclick='setCookie("user_phone_call",${data[i]["user_phone_no"]}); setCookie("doctor_phone_call",getCookie("phone_no")); setCookie("call_id",${data[i]["id"]}); setCookie("call_type","${data[i]["call_type"]}"); window.location = "agora_doctor.html"' >
+                      <img src="icons/png/decline.png" height="35px" style="margin-left:10px;" onclick='setCookie("call_id",${data[i]["id"]}); ignore_call()'  >
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>`
+            }
+            $("#call_container").html(temp);
+        });
+        $("#call_container").html(temp);
+      }
+      function update_history(){
+          $("#history_stats_1").html("");
+          var temp="<center><h3>Cant Fetch History Right Now,Make sure you are connected to internet</center>"
+          $.get(doctor_history_url,
+          {"phone_no" : getCookie("phone_no")},
+          function(data, status){
+            console.log(data)
+            temp="";
+            temp+=`<div class="row">
+              <div class="col">
+                <div class="card card-style" >
+                  <div class="heading">Today</div>
+                  <div class="topic ">Total Customer Count: ${data["day"]["count"]}</div>
+                  <div class="topic ">Total Time Spent: ${data["day"]["time"]}</div>
+                  <div class="topic">Total Amount Earned: ${data["day"]["amount"]}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="card card-style" >
+                  <div class="heading">This Week</div>
+                  <div class="topic ">Total Customer Count: ${data["week"]["count"]}</div>
+                  <div class="topic ">Total Time Spent:${data["week"]["time"]}</div>
+                  <div class="topic">Total Amount Earned: ${data["week"]["amount"]}</div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                  <div class="card card-style" >
+                    <div class="heading">This Month</div>
+                    <div class="topic ">Total Customer Count: ${data["month"]["count"]}</div>
+                    <div class="topic ">Total Time Spent: ${data["month"]["time"]}</div>
+                    <div class="topic">Total Amount Earned: ${data["month"]["amount"]}</div>
+                  </div>
+                </div>
+              </div>
+            <div class="row">
+              <div class="col">
+                <div class="card card-style">
+                  <div class="heading">This Year</div>
+                  <div class="topic">Total Customer Count:${data["year"]["count"]}</div>
+                  <div class="topic ">Total Time Spent: ${data["year"]["time"]}</div>
+                  <div class="topic">Total Amount Earned: ${data["year"]["amount"]}</div>
+                </div>
+              </div>
+            </div>`
+            $("#history_stats_1").html(temp);
+          })
+        }
+    </script>
+      <script src="js/common.js" charset="utf-8"></script>
+  </body>
+</html>

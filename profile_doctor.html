@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2012-2016 Adobe Systems Incorporated. All rights reserved.
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+
+  <head>
+    <!-- Good default declaration:
+    * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+    * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+    * Disables use of eval() and inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+        * Enable inline JS: add 'unsafe-inline' to default-src
+        * Enable eval(): add 'unsafe-eval' to default-src
+    * Create your own at http://cspisawesome.com
+    -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" /> -->
+
+    <title>reDockto</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/profile_doctor.css">
+    <link rel="stylesheet" href="css/all.min.css">
+    <script src="js/all.min.js" charset="utf-8"></script>
+</head>
+
+<body>
+
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+    <path
+      fill="#95A3EF"
+      fill-opacity="1"
+      d="M0,96L48,106.7C96,117,192,139,288,133.3C384,128,480,96,576,101.3C672,107,768,149,864,181.3C960,213,1056,235,1152,213.3C1248,192,1344,128,1392,96L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
+    ></path>
+  </svg>
+
+  <div class="container">
+    <div class="profile" >
+      <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10 " style="text-align:center">
+          <!-- <img src="img/profile.png" style="width:150px;border-radius:50%;background-color:white">
+          <div style="font-size:1.3rem;font-weight:bold"></div> -->
+              <img id="profileImage" src="img/profile.png" width="220px">
+              <img src="img/penciledit.png" id="profileImageEE" style="position: absolute; top:'2px'; right:'2px';" width="40px" >
+              <input id="imageUpload" type="file" name="profile_photo" placeholder="Photo" required="" capture>
+              <style type="text/css">
+                  #imageUpload
+                  {
+                      display: none;
+                  }
+
+                  #profileImageEE
+                  {
+                      cursor: pointer;
+                  }
+              </style>
+        </div>
+      </div>
+      <div class="row" style="margin-top:3px">
+        <div class="col-2"></div>
+        <div class="col-8 form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" class="form-control text-center" style="font-size:0.8rem;" disabled></div>
+      </div>
+      <div class="row" style="margin-top:3px">
+        <div class="col-2"></div>
+        <div class="col-8 form-group">
+          <label for="phone_no">Phone Number</label>
+          <input type="text" id="phone_no" class="form-control text-center" style="font-size:0.8rem;"  disabled>
+        </div>
+      </div>
+      <div class="row" style="margin-top:3px">
+        <div class="col-2"></div>
+        <div class="col-8 form-group">
+          <label for="email">Email</label>
+          <input type="text" id="email" class="form-control text-center" style="font-size:0.8rem;"  disabled></div>
+      </div>
+      <div class="row" style="margin-top:3px">
+        <div class="col-2"></div>
+        <div class="col-8 form-group">
+          <label for="qualification">Qualification</label>
+          <input type="text" id="qualification" class="form-control text-center" style="font-size:0.8rem;" ></div>
+      </div>
+      <div class="row" style="margin-top:3px">
+        <div class="col-2"></div>
+        <div class="col-8 form-group">
+          <label for="expertise">Expertise</label>
+          <input type="text" id="expertise" class="form-control text-center" style="font-size:0.8rem;" ></div>
+      </div>
+      <div class="row" style="margin-top:3px">
+        <div class="col-2"></div>
+        <div class="col-8 form-group">
+          <label for="rate">Service Charge(₹/ 30 mins)</label>
+          <input type="number" id="rate" class="form-control text-center" style="font-size:0.8rem;" ></div>
+      </div>
+      <div class="row" style="margin-top:3px">
+        <div class="col-2"></div>
+        <div class="col-8 form-group">
+          <label for="experience">Experience</label>
+          <input type="number" id="experience" class="form-control text-center" style="font-size:0.8rem;" ></div>
+      </div>
+      <div class="row" style="margin-top:3px">
+        <div class="col-2"></div>
+        <div class="col-8 form-group">
+          <label for="summary">Summary</label>
+          <textarea id="summary" class="form-control text-center" cols="40" style="font-size:0.8rem;" ></textarea></div>
+      </div>
+      <div class="row" style="margin-top:3px">
+        <div class="col-2"></div>
+        <div class="col-8 form-group">
+          <label for="location">Location</label>
+          <input type="text" id="location" class="form-control text-center" style="font-size:0.8rem;" ></div>
+      </div>
+    </div>
+    <div class="row" style="margin-top:3px">
+      <div class="col-2"></div>
+      <div class="col-8" ><div class="btn-success btn-lg btn-block" id="save" style="text-align:center;">Save</div></div>
+    </div>
+    <div class="row" style="margin-top:3px">
+      <div class="col-2"></div>
+      <div class="col-8"><div class="btn-danger btn-lg btn-block sign_out_button" style="text-align:center">Sign Out</div></div>
+    </div>
+  </div>
+  <br><br><br>
+  <div class="footer">
+    <div class="footer-element" id="wallet" >
+        <i class="fas fa-credit-card" ></i><br>
+        Wallet
+    </div>
+    <div class="footer-element" id="doctopad">
+        <i class="fas fa-file-alt footer-icon" ></i><br>
+        History
+    </div>
+    <div class="footer-element" id="counselling">
+        <i class="fas fa-heart footer-icon" ></i><br>
+        Counselling
+    </div>
+    <div class="footer-element" id="upload">
+        <i class="far fa-calendar-alt footer-icon" ></i><br>
+        Upload
+    </div>
+    <div class="footer-element active"  id="profile_doctor">
+      <i class="fas fa-user footer-icon" ></i><br>
+        Profile
+    </div>
+  </div>
+  <script src="js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
+  <script src="js/common.js" charset="utf-8"></script>
+    <script type="text/javascript">
+    $("#phone_no").val(getCookie("phone_no"));
+    $("#name").val(getCookie("name"));
+    $("#email").val(getCookie("email"));
+    // $("#dob").val("DOB : "+getCookie("dob"));
+    $("#qualification").val(getCookie("qualification"));
+    $("#expertise").val(getCookie("expertise"));
+    $("#rate").val(getCookie("rate"));
+    $("#experience").val(getCookie("experience"));
+    $("#summary").val(getCookie("summary"));
+    $("#location").val(getCookie("location"));
+    if(getCookie("pic").split("/")[0] == "static"){
+        $('#profileImage').attr('src', base_url+getCookie("pic"));
+    } else {
+        $('#profileImage').attr('src', getCookie("pic"));
+    }
+
+      $("#profileImage").on("error", function () {
+          $(this).attr("src", "img/doc.jpg");
+      });
+
+      $("#profileImageEE").on("click",function(e) {
+        console.log("helloworld")
+          $("#imageUpload").click();
+      });
+
+      $("#imageUpload").change(function(){
+          // previewProfileImage( this );
+          fasterPreview( this );
+      });
+
+      function fasterPreview( uploader ) {
+          if ( uploader.files && uploader.files[0] ){
+                $('#profileImage').attr('src',
+                  window.URL.createObjectURL(uploader.files[0]) );
+
+                  var formData = new FormData();
+                  formData.append('pic', uploader.files[0]);
+                  formData.append('phone_no', getCookie("phone_no"));
+
+                  $.ajax({
+                     url : user_update_pic_url,
+                     type : 'POST',
+                     data : formData,
+                     processData: false,  // tell jQuery not to process the data
+                     contentType: false,  // tell jQuery not to set contentType
+                     success : function(data) {
+                         //alert(JSON.stringify(data));
+                         alert("Updated profile picture")
+                         setCookie("pic", data["pic"]);
+                     }
+                  });
+          }
+      }
+      function reload(){
+          // if(getCookie("phone_no") == "") {
+          //     window.location = 'sign_in.html';
+          // } else {
+
+          // }
+      }
+
+      $(document).ready(function() {
+
+      $('#save').on("click",function(){
+
+        $.post(update_doctor,
+          {
+            "phone_no":getCookie("phone_no"),
+            "qualification":$('#qualification').val(),
+            "expertise":$('#expertise').val(),
+            "rate":$('#rate').val(),
+            "experience":$('#experience').val(),
+            "summary":$('#summary').val(),
+            "location":$('#location').val(),
+          },function(data,status){
+            if(data["status"]!="Failure"){
+              setCookie("qualification",$('#qualification').val(),30)
+              setCookie("expertise",$('#expertise').val(),30),
+              setCookie("rate",$('#rate').val(),30),
+              setCookie("experience",$('#experience').val(),30),
+              setCookie("summary",$('#summary').val(),30),
+              setCookie("location",$('#location').val(),30),
+              window.location="profile_doctor.html"
+
+            }
+          });
+
+      })
+      $(".sign_out_button").click(function() {
+          sign_out()
+          // setCookie("phone_no", "", 30);
+          // reload();
+      });
+    });
+  </script>
+
+
+    <script type="text/javascript">
+        app.initialize();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Docktopad</title>
+  </head>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/all.min.css">
+  <link rel="stylesheet" href="css/docktopad.css">
+  <script src="js/all.min.js" charset="utf-8"></script>
+  <body>
+    <div class="curvy-header">
+      reDockto
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+      <path
+        fill="#95A3EF"
+        fill-opacity="1"
+        d="M0,96L48,106.7C96,117,192,139,288,133.3C384,128,480,96,576,101.3C672,107,768,149,864,181.3C960,213,1056,235,1152,213.3C1248,192,1344,128,1392,96L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
+      ></path>
+    </svg>
+    <div class="container" id="history">
+
+    </div>
+    <br><br><br>
+    <div class="footer">
+      <div class="footer-element" id="wallet" >
+          <i class="fas fa-credit-card" ></i><br>
+          Wallet
+      </div>
+      <div class="footer-element active" id="doctopad">
+          <i class="fas fa-file-alt footer-icon" ></i><br>
+          History
+      </div>
+      <div class="footer-element" id="counselling">
+          <i class="fas fa-heart footer-icon" ></i><br>
+          Counselling
+      </div>
+      <div class="footer-element" id="upload">
+          <i class="far fa-calendar-alt footer-icon" ></i><br>
+          Upload
+      </div>
+      <div class="footer-element" id="profile_doctor">
+        <i class="fas fa-user footer-icon" ></i><br>
+          Profile
+      </div>
+    </div>
+  </body>
+  <script src="js/jquery-1.11.1.min.js" charset="utf-8"></script>
+  <script src="js/index.js" charset="utf-8"></script>
+  <script src="js/common.js" charset="utf-8"></script>
+  <script type="text/javascript">
+    $.get(get_all_history,{
+      phone_no:getCookie('phone_no')
+    },function(data,status){
+      let temp="<h3>Service History</h3>"
+      for(let i=data.length-1;i>=0;i--)
+      {
+        if(data[i]["start_time"]!=null&&data[i]["end_time"]!=null&&data[i]['doctor_phone_no']==getCookie("phone_no"))
+        {
+          let startminute=parseInt(data[i]['start_time'].split(':')[1])
+          let endminute=parseInt(data[i]['end_time'].split(':')[1])
+          let startsecond=parseInt(data[i]['start_time'].split(':')[2].split('.')[0])
+          let endsecond=parseInt(data[i]['end_time'].split(':')[2].split('.')[0])
+          let minutes=endminute-startminute
+          let seconds=endsecond-startsecond
+          if(seconds<0)
+          {
+            minutes-=1
+            seconds+=60
+          }
+          let duration=''
+          if(minutes!=0)
+          {
+            duration+=minutes+' minutes '
+          }
+          duration+=seconds+' seconds'
+          temp+=`
+          <div class="row" style="margin-top:10px">
+            <div class="col">
+              <div class="card">
+                <div class="container">
+                  <div class="row card-element">
+                    <div class="col-6 heading">
+                      Patient Name
+                    </div>
+                    <div class="col-6">
+                      ${data[i]['user_name']}
+                    </div>
+                  </div>
+                  <div class="row card-element">
+                    <div class="col-6 heading">
+                      Date
+                    </div>
+                    <div class="col-6">
+                      ${data[i]['date']}
+                    </div>
+                  </div>
+                  <div class="row card-element">
+                    <div class="col-6 heading">
+                      Call Duration
+                    </div>
+                    <div class="col-6">
+                      ${duration}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>`
+        }
+      }
+      $('#history').html(temp)
+    })
+  </script>
+</html>

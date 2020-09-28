@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title>Patient Wallet</title>
+      <link rel="stylesheet" href="css/all.min.css">
+      <script src="js/all.min.js" charset="utf-8"></script>
+      <link rel="stylesheet" href="css/patient_wallet.css">
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+   </head>
+   <body>
+      <div class="curvy-header">
+         Wallet
+      </div>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+         <path
+            fill="#95A3EF"
+            fill-opacity="1"
+            d="M0,96L48,106.7C96,117,192,139,288,133.3C384,128,480,96,576,101.3C672,107,768,149,864,181.3C960,213,1056,235,1152,213.3C1248,192,1344,128,1392,96L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
+            ></path>
+      </svg>
+      <div class="container">
+         <div class="wallet"  style="margin-top:20px">
+            <div class="container">
+               <div class="row">
+                  <div class="col-1" ></div>
+                  <div class="col-10">
+                     <div class="card">
+                        <div class="balance text-center" style="background-color:#F6F6F6" >
+                           <div style="color:grey;font-size:0.9rem;">AVAILABLE BALANCE</div>
+                           <div style="font-weight:bold;margin-bottom:10px;font-size:1.2rem" id="amount">₹ 0.00</div>
+                        </div>
+                        <div class="input-value">
+                           <input type="number" class="form-control" id="withdraw_amt_in" placeholder="Enter Amount (₹)" style="margin-top:10px;border-width:0px 0px 1px 0px;padding:10px">
+                           <div class="money-btn" style="padding:10px">
+                              <div class="btn btn-light" id="addthousand" style="color:#5EBA9B;border:1px solid grey;font-weight:bold">+1000</div>
+                              <div class="btn btn-light" id="addfive" style="color:#5EBA9B;border:1px solid grey;font-weight:bold">+500</div>
+                              <div class="btn btn-light" id="addhundred" style="color:#5EBA9B;border:1px solid grey;font-weight:bold">+100</div>
+                           </div>
+                           <div class="btn btn-lg btn-block btn-primary withdraw_in_button" style="color:white;margin-top:20px;width:90%;margin-left:5%">
+                              Withdraw Money
+                           </div>
+                        </div>
+                        <hr>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+         </div>
+      </div>
+      <br><br><br>
+      <div class="footer">
+        <div class="footer-element active" id="wallet" >
+            <i class="fas fa-credit-card" ></i><br>
+            Wallet
+        </div>
+        <div class="footer-element" id="doctopad">
+            <i class="fas fa-file-alt footer-icon" ></i><br>
+            History
+        </div>
+        <div class="footer-element " id="counselling">
+            <i class="fas fa-heart footer-icon" ></i><br>
+            Counselling
+        </div>
+        <div class="footer-element" id="upload">
+            <i class="far fa-calendar-alt footer-icon" ></i><br>
+            Upload
+        </div>
+        <div class="footer-element" id="profile_doctor">
+          <i class="fas fa-user footer-icon" ></i><br>
+            Profile
+        </div>
+      </div>
+      <script src="cordova.js" charset="utf-8"></script>
+      <script src="js/jquery-1.11.1.min.js" charset="utf-8"></script>
+      <script src="js/index.js" charset="utf-8"></script>
+      <script src="js/common.js" charset="utf-8"></script>
+      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+      <script>
+      refresh();
+      $('#refresh').on("click",function(){
+        refresh();
+      })
+        function refresh(){
+          $.post(get_wallet_money,
+            {
+              "phone_no":getCookie("phone_no")
+            },function(data,status){
+
+              $('#amount').text("₹ "+data["wallet"])
+          })
+        }
+
+        $('#wallethistory').on("click",function(){
+          alert("This feature is coming soon")
+        })
+         $('#amount').html("₹ "+getCookie("wallet"))
+         $('#addthousand').on("click",function(){
+           console.log($("#withdraw_amt_in").val);
+           if($("#withdraw_amt_in").val()==="")
+             $("#withdraw_amt_in").val("1000")
+           else
+            $("#withdraw_amt_in").val(parseInt($("#withdraw_amt_in").val())+1000);
+         })
+         $('#addfive').on("click",function(){
+           if($("#withdraw_amt_in").val()==="")
+             $("#withdraw_amt_in").val("500")
+           else
+           $("#withdraw_amt_in").val(parseInt($("#withdraw_amt_in").val())+500);
+         })
+         $('#addhundred').on("click",function(){
+           if($("#withdraw_amt_in").val()==="")
+             $("#withdraw_amt_in").val("100")
+           else
+           $("#withdraw_amt_in").val(parseInt($("#withdraw_amt_in").val())+100);
+         })
+
+         $('.withdraw_in_button').on("click",function(){
+           var temp_amt = parseFloat($("#withdraw_amt_in").val());
+
+           if( temp_amt > 0.0 ){
+               if( temp_amt < parseFloat(getCookie("wallet")) ){
+                 $.post(withdraw_wallet,{
+                   'phone_no':getCookie("phone_no"),
+                   "price":temp_amt
+                 },function(data,status){
+                   if(data["status"]!="Failed"){
+                     $('#withdraw_wallet').text("₹ "+data["wallet"])
+                     setCookie("wallet",data["wallet"])
+                     refresh();
+                     $('#withdraw_amt_in').val("")
+                   }
+                   else
+                   {
+                     alert("Server Error try after some time")
+                   }
+                 })
+                 alert("Withdraw Request Registered Succesfully");
+
+               } else {
+                   alert("Insufficient Balance");
+                   $("#recharge_amt_in").val("");
+               }
+           } else {
+               alert("Invalid Recharge Amount");
+               $("#recharge_amt_in").val("");
+           }
+         })
+
+      </script>
+   </body>
+</html>

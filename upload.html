@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/all.min.css">
+    <script src="js/all.min.js" charset="utf-8"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="./css/dashboard.css" />
+
+    <title>Upload</title>
+  </head>
+  <body>
+    <div class="curvy-header">
+      Calls
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+      <path
+        fill="#95A3EF"
+        fill-opacity="1"
+        d="M0,96L48,106.7C96,117,192,139,288,133.3C384,128,480,96,576,101.3C672,107,768,149,864,181.3C960,213,1056,235,1152,213.3C1248,192,1344,128,1392,96L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
+      ></path>
+    </svg>
+    <div class="container">
+      <ul class="nav nav-pills nav-fill">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="pill" id="therapy-upload">Upload Therapy</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="pill" id="video-upload">Upload Video</a>
+        </li>
+      </ul>
+      <div class="therapy-upload" style="margin-top:40px;">
+        <div class="container text-center">
+          <h1>Therapy Upload</h1>
+            <div class="row">
+              <div class="col">
+                <input class="form-control" placeholder="Enter Title"  id="therapytitle">
+                <input class="form-control" placeholder="Enter Description" id="therapydescription" style="margin-top:15px">
+                <input class="form-control" placeholder="Enter URL" id="therapyurl" style="margin-top:15px">
+                <div class="btn btn-success btn-lg btn-block" style="margin-top:30px">Upload</div>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="video-upload" style="margin-top:40px">
+        <div class="container text-center">
+          <h1>Video Upload</h1>
+            <div class="row">
+              <div class="col">
+                <input class="form-control" placeholder="Enter Title" id="videotitle">
+                <input class="form-control" placeholder="Enter Description" id="videodescription" style="margin-top:15px">
+                <input class="form-control" placeholder="Enter URL" id="videourl" style="margin-top:15px">
+                <div class="btn btn-success btn-lg btn-block" style="margin-top:30px">Upload</div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br><br><br>
+    <div class="footer">
+      <div class="footer-element" id="wallet">
+          <i class="fas fa-credit-card" ></i><br>
+          Wallet
+      </div>
+      <div class="footer-element" id="doctopad">
+          <i class="fas fa-file-alt footer-icon" ></i><br>
+          History
+      </div>
+      <div class="footer-element " id="counselling">
+          <i class="fas fa-heart footer-icon" ></i><br>
+          Counselling
+      </div>
+      <div class="footer-element active" id="upload">
+          <i class="far fa-calendar-alt footer-icon" ></i><br>
+          Upload
+      </div>
+      <div class="footer-element" id="profile_doctor">
+        <i class="fas fa-user footer-icon" ></i><br>
+          Profile
+      </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/bootstrap.min.js" charset="utf-8"></script>
+
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+      $('.video-upload').hide();
+      $('#therapy-upload').on("click",function(){
+        $('.therapy-upload').show();
+        $('.video-upload').hide();
+      })
+      $('#video-upload').on("click",function(){
+        $('.therapy-upload').hide();
+        $('.video-upload').show();
+      })
+    })
+    $.post(upload_therapy,{
+      "therapytitle":$('#therapytitle').val(),
+      "therapydescription":$('#therapydescription').val(),
+      "therapyurl":$('#therapyurl').val()
+    })
+    $.post(upload_video,{
+      "videotitle":$('#videotitle').val(),
+      "videodescription":$('#videodescription').val(),
+      "videourl":$('#videourl').val()
+    })
+
+
+    </script>
+    <script src="js/index.js" charset="utf-8"></script>
+    <script src="js/common.js" charset="utf-8"></script>
+  </body>
+</html>

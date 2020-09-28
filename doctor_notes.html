@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Doctor Notes</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/feedback.css">
+    <link rel="stylesheet" href="css/all.min.css">
+    <script src="js/all.min.js"  type="text/javascript">
+
+    </script>
+  </head>
+  <body>
+    <div class="curvy-header">
+      Notes
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+      <path
+        fill="#95A3EF"
+        fill-opacity="1"
+        d="M0,96L48,106.7C96,117,192,139,288,133.3C384,128,480,96,576,101.3C672,107,768,149,864,181.3C960,213,1056,235,1152,213.3C1248,192,1344,128,1392,96L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
+      ></path>
+    </svg>
+    <div class="container">
+      <div class="row">
+        <div class="col-2">
+        </div>
+        <div class="col-8">
+          <div class="card text-center">
+            <h5 style="padding-top:20px">Please provide Notes to the user</h5>
+            <br>
+            <textarea id="feed_comments" style="height:150px;width:80%;margin-left:10%;" placeholder="Enter your notes here" class="form-control"></textarea>
+            <br>
+            <div class="btn btn-primary" id="submit" style="width:50%;margin-left:30%;margin-bottom:20px" >Submit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <script src="js/index.js" charset="utf-8"></script>
+    <script>
+      $('#submit').on("click",function(){
+        let user_phone=getCookie("user_phone_call")
+        let call_id=getCookie("call_id")
+        let doctor_phone=getCookie("doctor_phone_call")
+        let notes=$('#feed_comments').val();
+        $.post(add_notes,{
+          "user_phone":user_phone,
+          "doctor_phone":doctor_phone,
+          "call_id":call_id,
+          "notes":notes,
+        },
+      function(data,status){
+        if(data["status"]!="Failure")
+        {
+          alert("submitted")
+          window.location="counselling_history_doctor.html"
+        }
+        else
+        {
+          alert("there was some problem try again")
+        }
+      })
+      })
+    </script>
+  </body>
+</html>
